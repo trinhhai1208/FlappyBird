@@ -6,6 +6,7 @@ public class BirdController : MonoBehaviour
     private Rigidbody2D rb;
     private bool isDead = false;
     private Animator anim;
+    //private bool isImmortal = false;
 
     void Start()
     {
@@ -35,8 +36,9 @@ public class BirdController : MonoBehaviour
         AudioManager.instance.PlayFlap();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
+        //if (isImmortal) return;
         Die();
     }
 
@@ -58,4 +60,9 @@ public class BirdController : MonoBehaviour
         AudioManager.instance.PlayDie();
         GameManager.instance.GameOver();
     }
+
+    /*public void SetImmortal(bool value)
+    {
+        isImmortal = value;
+    }*/
 }

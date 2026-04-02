@@ -13,15 +13,18 @@ public class GameManager : MonoBehaviour
     public float speedIncreasePerPoint = 0.1f;
 
     [Header("UI References")]
-    public SpriteScore scoreDisplay, finalScoreDisplay;
-    public GameObject gameOverPanel;
+    public SpriteScore scoreDisplay, finalScoreDisplay, bestScoreDisplay;
+    public GameObject gameOverPanel, newBadge;
+    public GameObject bronze, silver, gold;
 
     private int score = 0;
+    private int bestScore = 0;
     private bool isAlive = true;
 
     void Awake()
     {
         instance = this;
+        bestScore = PlayerPrefs.GetInt("BestScore", 0);
     }
 
     public float GetCurrentSpeed()
@@ -37,9 +40,9 @@ public class GameManager : MonoBehaviour
 
         foreach (var pipe in FindObjectsOfType<PipeMove>(true))
             pipe.speed = GetCurrentSpeed();
-
         // Cập nhật tốc độ spawn
         UpdateSpawnInterval();
+         
     }
 
     void UpdateSpawnInterval()
@@ -55,18 +58,31 @@ public class GameManager : MonoBehaviour
     {
         if(!isAlive) return;
         isAlive = false;
-        finalScoreDisplay.SetScore(score);
-        gameOverPanel.SetActive(true);
+        if (score > bestScore)
+        {
+            bestScore = score;
+            PlayerPrefs.SetInt("BestScore", bestScore);
+            PlayerPrefs.Save();
+            newBadge.SetActive(true);
+        }
+        else
+        {
+            newBadge.SetActive(false);
+        }
+        if (score >= 10) bronze.SetActive(true);
+        if (score >= 30) silver.SetActive(true);
+        if (score >= 50) gold.SetActive(true);
         Time.timeScale = 0f;
         StartCoroutine(ShowGameOver());
     }
     IEnumerator ShowGameOver()
-{
-    // Chờ 1 frame để score cập nhật xong
-    yield return null;
-    finalScoreDisplay.SetScore(score);
-    gameOverPanel.SetActive(true);
-}
+    {
+        // Chờ 1 frame để score cập nhật xong
+        yield return null;
+        finalScoreDisplay.SetScore(score);
+        bestScoreDisplay.SetScore(bestScore);
+        gameOverPanel.SetActive(true);
+    }
     public void ReStart()
     {
         AudioManager.instance.PlaySwoosh();
@@ -81,5 +97,5 @@ public class GameManager : MonoBehaviour
             ReStart();
         }
     }
-   
+    
 }

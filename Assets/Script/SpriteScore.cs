@@ -11,14 +11,29 @@ public class SpriteScore : MonoBehaviour
     public float digitSpacing = 4f;
 
     private int currentScore = 0;
+    private bool initialized = false;
 
-    void Start()
+    void OnEnable()
+    {
+        if(!initialized)
+        {
+            initialized = true;
+            UpdateDisplay(0);
+        }
+        else
+        {
+            UpdateDisplay(currentScore);
+        }
+    }
+
+    /*void Start()
     {
         UpdateDisplay(0);
-    }
+    }*/
 
     public void SetScore(int score)
     {
+        initialized = true;
         currentScore = score;
         UpdateDisplay(score);
     }
