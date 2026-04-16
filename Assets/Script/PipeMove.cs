@@ -14,7 +14,7 @@ public class PipeMove : MonoBehaviour
 
         if (transform.position.x < -15f)
         {
-            Destroy(gameObject);
+            SimpleObjectPool.instance.ReturnToPool(gameObject);
         }
     }
 }
