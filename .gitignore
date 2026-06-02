@@ -16,3 +16,7 @@ MemoryCaptures/
 # OS
 .DS_Store
 Thumbs.db
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/settings.json
+.vsconfig
